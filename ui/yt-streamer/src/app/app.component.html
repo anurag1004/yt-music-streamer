@@ -1,0 +1,12 @@
+<div class="container-fluid">
+  <nav>
+    <h1>YtStreamer</h1>
+  </nav>
+  <div class="container">
+    <app-playlist-search-bar></app-playlist-search-bar>
+    <app-playlist-item
+      *ngFor="let item of playlist"
+      [playlistItem]="item"
+    ></app-playlist-item>
+  </div>
+</div>
