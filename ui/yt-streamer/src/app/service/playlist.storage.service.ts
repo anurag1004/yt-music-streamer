@@ -51,9 +51,21 @@ export class PlaylistStorageService {
         item.title
       );
     });
-    this.playListChanged.emit(this.playlist);
+    this.playListChanged.emit(this.playlist.slice());
   }
   getPlaylist() {
     return this.playlist.slice();
+  }
+  filterPlaylistItems(query: string) {
+    const filteredPlaylist = this.playlist.filter((item) => {
+      // starts with or contains query word in title or by artist
+      return (
+        item.original_title.toLowerCase().startsWith(query.toLowerCase()) ||
+        item.original_title.toLowerCase().includes(query.toLowerCase()) ||
+        item.artist.toLowerCase().startsWith(query.toLowerCase()) ||
+        item.artist.toLowerCase().includes(query.toLowerCase())
+      );
+    });
+    this.playListChanged.emit(filteredPlaylist);
   }
 }

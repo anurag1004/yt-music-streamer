@@ -1,0 +1,13 @@
+<div class="row mt-2">
+  <div class="col"></div>
+  <div class="col-4">
+    <input
+      type="text"
+      class="form-control w-100"
+      placeholder="Search songs in your playlist... (by title or artist)"
+      [(ngModel)]="query"
+      (input)="filterPlaylist($event)"
+    />
+  </div>
+  <div class="col"></div>
+</div>

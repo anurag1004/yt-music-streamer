@@ -9,12 +9,4 @@ import { PlaylistItem } from 'src/shared/playlistItem.model';
 })
 export class AppComponent {
   title = 'yt-streamer';
-  playlist:PlaylistItem[] = [];
-  constructor(private plStorageServ:PlaylistStorageService){
-    this.plStorageServ.playListChanged.subscribe((playlist:PlaylistItem[]) => {
-      this.playlist = playlist;
-    });
-    // temporary
-    this.playlist = this.plStorageServ.getPlaylist();
-  }
 }

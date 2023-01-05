@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlaylistStorageService } from '../service/playlist.storage.service';
+
 @Component({
-  selector: 'app-playlist-search-bar',
-  templateUrl: './playlist-search-bar.component.html',
-  styleUrls: ['./playlist-search-bar.component.css']
+  selector: 'app-playlist-fetch-bar',
+  templateUrl: './playlist-fetch-bar.component.html',
+  styleUrls: ['./playlist-fetch-bar.component.css']
 })
-export class PlaylistSearchBarComponent {
-    playlistUrl:string = '';
+export class PlaylistFetchBarComponent {
+  playlistUrl:string = '';
     private baseUrl:string = 'http://localhost:3000';
     constructor(private httpClient:HttpClient, private plStorageServ:PlaylistStorageService) { }
     fetchPlaylist(event:Event) {

@@ -4,16 +4,20 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PlaylistSearchBarComponent } from './playlist-search-bar/playlist-search-bar.component';
 import { FormsModule } from '@angular/forms';
-import { PlaylistItemComponent } from './playlist-item/playlist-item.component';
+import { PlaylistItemComponent } from './playlist/playlist-item/playlist-item.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PlaylistComponent } from './playlist/playlist.component';
+import { PlaylistFetchBarComponent } from './playlist-fetch-bar/playlist-fetch-bar.component';
+import { SearchBarComponent } from './playlist/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlaylistSearchBarComponent,
-    PlaylistItemComponent
+    PlaylistItemComponent,
+    PlaylistComponent,
+    PlaylistFetchBarComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,

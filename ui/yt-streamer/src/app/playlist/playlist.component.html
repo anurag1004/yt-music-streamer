@@ -1,0 +1,7 @@
+<div class="container">
+    <app-search-bar></app-search-bar>
+    <app-playlist-item
+      *ngFor="let item of playlist"
+      [playlistItem]="item"
+    ></app-playlist-item>
+</div>
