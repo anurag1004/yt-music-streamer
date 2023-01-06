@@ -5,6 +5,11 @@
       <div class="card">
         <div class="card-body">
           <fa-icon [icon]="musicIcon"></fa-icon> {{ playlistItem.artist }} - {{ playlistItem.original_title }}
+          <br/>
+          <audio controls>
+            <source src="{{previewUrl}}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
         </div>
       </div>
     </div>

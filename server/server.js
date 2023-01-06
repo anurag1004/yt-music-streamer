@@ -1,9 +1,14 @@
+const cacheCleaner = require("./cron/cache.cleaner");
+
 const express = require("express"),
   app = express(),
   ytdl = require("ytdl-core"),
+  cron = require("node-cron"),
   listenMusicHandler = require("./middlewares/listenMusicHandler"),
   getPlaylistVideos = require("./helper/getPlaylistVideos.helper");
-// allow cors
+  // clean cach files at every 15 minute
+  cron.schedule("*/15 * * * *", cacheCleaner)
+  // allow cors
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
@@ -12,8 +17,8 @@ app.use((req, res, next) => {
 })
 app.get("/info/:id", async (req, res) => {
   try {
-    const info = await  ytdl.getBasicInfo(req.params.id);
-    res.send(info.videoDetails);
+    const info = await  ytdl.getBasicInfo(req.params.id,{filter: "audioonly", opusEncoded: true});
+    res.send(info.formats[info.formats.length - 1]);
   } catch (err) {
     console.error(err);
     if (!res.headersSent) {
@@ -34,5 +39,5 @@ app.get("/playlist/:playlistId",async(req, res)=>{
         }
     }
 })
-app.get("/listen/:id", listenMusicHandler);
+app.get("/playsong/:id", listenMusicHandler);
 app.listen(3000, () => console.log("listening on port 3000"));
