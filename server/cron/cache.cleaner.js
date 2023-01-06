@@ -2,6 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 const cacheCleaner = ()=>{
+    // TODO: delete cache files has some problem, EPPERM: operation not permitted, open
     const cacheDir = path.join(__dirname, "../cache");
     const cacheFiles = fs.readdirSync(cacheDir);
     cacheFiles.forEach((file) => {

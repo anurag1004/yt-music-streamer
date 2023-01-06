@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { PlaylistFetchBarComponent } from './playlist-fetch-bar/playlist-fetch-bar.component';
 import { SearchBarComponent } from './playlist/search-bar/search-bar.component';
+import { MinuteSecondsPipe } from './pipes/minute-seconds.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SearchBarComponent } from './playlist/search-bar/search-bar.component';
     PlaylistItemComponent,
     PlaylistComponent,
     PlaylistFetchBarComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    MinuteSecondsPipe
   ],
   imports: [
     BrowserModule,

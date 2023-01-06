@@ -58,6 +58,7 @@ async function listenMusicHandler(req, res) {
       sendFile(req, res, outpath);
       return;
     }
+    console.log(`file ${req.params.id} not exist in cache`)
     // stream to res and add name to response header
     ytdl(`https://www.youtube.com/watch?v=${req.params.id}`, {
       filter: "audioonly",
