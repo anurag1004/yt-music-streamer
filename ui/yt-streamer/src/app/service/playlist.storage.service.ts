@@ -39,7 +39,7 @@ export class PlaylistStorageService {
     },
   ];
   public playListChanged = new EventEmitter<PlaylistItem[]>();
-  public currentSongChanged = new EventEmitter<PlaylistItem>();
+  public currentSongChanged = new EventEmitter<{track:PlaylistItem, index:number}>();
   constructor() {}
   addPlaylistItems(items: any[]) {
     this.playlist = items.map((item: any) => {
@@ -69,7 +69,11 @@ export class PlaylistStorageService {
     });
     this.playListChanged.emit(filteredPlaylist);
   }
-  playTrack(track: PlaylistItem) {
-    this.currentSongChanged.emit(track);
+  playTrack(track: PlaylistItem, index: number):void {
+    this.currentSongChanged.emit({track: track, index: this.playlist.indexOf(track)});
+  }
+  getTrackByIndex(index: number):void {
+    index = index < 0 ? this.playlist.length-1:(index > this.playlist.length-1 ? 0 : index);
+    this.currentSongChanged.emit({track: this.playlist[index], index});
   }
 }

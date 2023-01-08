@@ -2,7 +2,8 @@
     <app-search-bar></app-search-bar>
     <app-player></app-player>
     <app-playlist-item
-      *ngFor="let item of playlist"
+      *ngFor="let item of playlist; let i = index"
       [playlistItem]="item"
+      [index] = "i"
     ></app-playlist-item>
 </div>

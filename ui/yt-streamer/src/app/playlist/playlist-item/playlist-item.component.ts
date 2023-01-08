@@ -10,7 +10,7 @@ import { PlaylistStorageService } from 'src/app/service/playlist.storage.service
 })
 export class PlaylistItemComponent{
   @Input() playlistItem:PlaylistItem = new PlaylistItem('', '', '', '', '', '');
-
+  @Input() index:number = -1;
   /*
     configure icons
   */
@@ -19,6 +19,6 @@ export class PlaylistItemComponent{
   }
   
   playTrack():void {
-    this.plStorageServ.playTrack(this.playlistItem);
+    this.plStorageServ.playTrack(this.playlistItem, this.index);
   }
 }
