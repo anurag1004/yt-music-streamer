@@ -16,14 +16,14 @@
     <div class="col-3">
       <div class="row">
         <div class="col mt-1">
-          <button class="btn btn-primary w-100" (click)="fetchPlaylist($event)">
+          <button class="btn btn-primary w-100" (click)="fetchPlaylist($event, mymodal)">
             Fetch Playlist!
           </button>
         </div>
         <div class="col mt-1">
           <button
             class="btn btn-primary w-100"
-            (click)="refreshPlaylist($event)"
+            (click)="refreshPlaylist($event, null)"
           >
             Refresh Playlist
           </button>
@@ -32,4 +32,37 @@
     </div>
     <div class="col"></div>
   </div>
+  <div class="row mt-3">
+    <div class="col"></div>
+    <div class="col-3">
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let pl of foundPlaylists" (click)="loadSelectedPlaylist(pl)" id="foundPlaylist">
+          {{pl.name}}
+        </li>
+      </ul>
+    </div>
+    <div class="col"></div>
+  </div>
+  <ng-template #mymodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Found New Playlist</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- ask for new playlist name -->
+      <input
+        type="text"
+        placeholder="Enter new playlist name.."
+        class="form-control"
+        [(ngModel)]="newPlaylistName"
+        required
+        #newPlaylistNameInput
+      />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" [disabled]="newPlaylistName.length==0" (click)="modal.close('Save click')">Ok</button>
+    </div>
+  </ng-template>
 </div>

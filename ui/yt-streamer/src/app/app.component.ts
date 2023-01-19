@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { PlaylistStorageService } from './service/playlist.storage.service';
-import { PlaylistItem } from 'src/shared/playlistItem.model';
 
 @Component({
   selector: 'app-root',

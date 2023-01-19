@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PlaylistItem } from 'src/shared/playlistItem.model';
-import { PlaylistStorageService } from '../service/playlist.storage.service';
+import { PlayerService } from '../service/player.service';
 
 @Component({
   selector: 'app-playlist',
@@ -9,11 +9,11 @@ import { PlaylistStorageService } from '../service/playlist.storage.service';
 })
 export class PlaylistComponent {
   playlist:PlaylistItem[] = [];
-  constructor(private plStorageServ:PlaylistStorageService){
-    this.plStorageServ.playListChanged.subscribe((playlist:PlaylistItem[]) => {
+  constructor(private playerServ:PlayerService){
+    this.playerServ.playListChanged.subscribe((playlist:PlaylistItem[]) => {
       this.playlist = playlist;
     });
     // temporary
-    this.playlist = this.plStorageServ.getPlaylist();
+    this.playlist = this.playerServ.getPlaylist();
   }
 }

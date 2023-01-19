@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 import {
   faMusic,
   faPlay,
@@ -6,9 +7,9 @@ import {
   faForwardFast,
   faBackwardFast,
   faShuffle,
-  faRepeat
+  faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
-import { PlaylistStorageService } from 'src/app/service/playlist.storage.service';
+import { PlayerService } from 'src/app/service/player.service';
 import { PlaylistItem } from 'src/shared/playlistItem.model';
 
 @Component({
@@ -37,8 +38,8 @@ export class PlayerComponent {
   isRepeat = false;
   private previewUrl: string = '';
 
-  constructor(private plStorageServ: PlaylistStorageService) {
-    this.plStorageServ.currentSongChanged.subscribe(
+  constructor(private playerServ: PlayerService) {
+    this.playerServ.currentSongChanged.subscribe(
       (currentSong: { track: PlaylistItem; index: number }) => {
         const { track, index } = currentSong;
         // stop current song if playing
@@ -96,18 +97,18 @@ export class PlayerComponent {
     }
     // change track
     if (direction === 'next') {
-      this.plStorageServ.getTrackByIndex(this.songIndex + 1, this.isShuffle);
+      this.playerServ.getTrackByIndex(this.songIndex + 1, this.isShuffle);
     } else {
-      this.plStorageServ.getTrackByIndex(this.songIndex - 1, this.isShuffle);
+      this.playerServ.getTrackByIndex(this.songIndex - 1, this.isShuffle);
     }
   }
   shuffleToggle(): void {
     this.isShuffle = !this.isShuffle;
     console.log(`shuffle: ${this.isShuffle}`);
   }
-  repeatCurrentSongToggle():void{
-    console.log(`repeat: ${this.isRepeat}`)
-    if(this.isRepeat){
+  repeatCurrentSongToggle(): void {
+    console.log(`repeat: ${this.isRepeat}`);
+    if (this.isRepeat) {
       this.audio.onended = () => {
         this.changeSong('next');
       };
@@ -117,8 +118,8 @@ export class PlayerComponent {
     this.audio.onended = () => {
       // repeat current song when song ends
       this.audio.play();
-    }
-    this.isRepeat = true
+    };
+    this.isRepeat = true;
   }
   setDefaultAudioConfig(): void {
     // reset audio object

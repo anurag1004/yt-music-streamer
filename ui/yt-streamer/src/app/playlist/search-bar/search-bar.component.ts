@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlaylistStorageService } from 'src/app/service/playlist.storage.service';
+import { PlayerService } from 'src/app/service/player.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -8,8 +8,8 @@ import { PlaylistStorageService } from 'src/app/service/playlist.storage.service
 })
 export class SearchBarComponent {
   query:string = ''
-  constructor(private plStorageServ: PlaylistStorageService) {}
+  constructor(private playerServ: PlayerService) {}
   filterPlaylist(event:Event):void {
-    this.plStorageServ.filterPlaylistItems(this.query);
+    this.playerServ.filterPlaylistItems(this.query);
   }
 }

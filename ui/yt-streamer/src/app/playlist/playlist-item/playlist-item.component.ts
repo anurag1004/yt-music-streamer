@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import { PlaylistItem } from 'src/shared/playlistItem.model';
 import { faIcons, faMusic, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { PlaylistStorageService } from 'src/app/service/playlist.storage.service';
+import { PlayerService } from 'src/app/service/player.service';
 
 @Component({
   selector: 'app-playlist-item',
@@ -15,10 +15,10 @@ export class PlaylistItemComponent{
     configure icons
   */
   musicIcon = faMusic;
-  constructor(private plStorageServ: PlaylistStorageService) {
+  constructor(private playerServ: PlayerService) {
   }
   
   playTrack():void {
-    this.plStorageServ.playTrack(this.playlistItem, this.index);
+    this.playerServ.playTrack(this.playlistItem, this.index);
   }
 }

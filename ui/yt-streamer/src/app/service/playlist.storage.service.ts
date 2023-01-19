@@ -1,86 +1,94 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { PlaylistItem } from 'src/shared/playlistItem.model';
-import * as _ from 'lodash';
+import { EventEmitter, Injectable, OnInit } from "@angular/core";
+import { Playlist } from "src/shared/playlist.model";
+import { PlayerService } from "./player.service";
+import * as moment from 'moment';
+import { HttpClient } from "@angular/common/http";
 @Injectable({
-  providedIn: 'root',
+    providedIn: "root"
 })
-export class PlaylistStorageService {
-  private playlist: PlaylistItem[] = [
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-1",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-2",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-3",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-4",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-  ];
-  private shuffledPlaylist: PlaylistItem[] = [];
-  public playListChanged = new EventEmitter<PlaylistItem[]>();
-  public currentSongChanged = new EventEmitter<{track:PlaylistItem, index:number}>();
-  constructor() {}
-  addPlaylistItems(items: any[]) {
-    this.playlist = items.map((item: any) => {
-      return new PlaylistItem(
-        item.artist,
-        item.duration,
-        item.id,
-        item.original_title,
-        item.publishedAt,
-        item.title
-      );
-    });
-    this.shuffledPlaylist = _.shuffle(this.playlist);
-    this.playListChanged.emit(this.playlist.slice());
-  }
-  getPlaylist() {
-    return this.playlist.slice();
-  }
-  filterPlaylistItems(query: string) {
-    const filteredPlaylist = this.playlist.filter((item) => {
-      // starts with or contains query word in title or by artist
-      return (
-        item.original_title.toLowerCase().startsWith(query.toLowerCase()) ||
-        item.original_title.toLowerCase().includes(query.toLowerCase()) ||
-        item.artist.toLowerCase().startsWith(query.toLowerCase()) ||
-        item.artist.toLowerCase().includes(query.toLowerCase())
-      );
-    });
-    this.playListChanged.emit(filteredPlaylist);
-  }
-  playTrack(track: PlaylistItem, index: number):void {
-    this.currentSongChanged.emit({track: track, index: this.playlist.indexOf(track)});
-  }
-  getTrackByIndex(index: number, isShuffle:boolean):void {
-    index = index < 0 ? this.playlist.length-1:(index > this.playlist.length-1 ? 0 : index);
-    if(isShuffle) {
-      this.currentSongChanged.emit({track: this.shuffledPlaylist[index], index});
-      return;
+export class PlaylistStorageService{
+    // playlist map
+    private playlists: Map<string, Playlist> = new Map();
+    baseUrl: string = 'http://localhost:3000';
+    public playlistChanged = new EventEmitter<Playlist[]>();
+    constructor(private playerServ:PlayerService, private httpClient:HttpClient) {
+        // // fetch all playlist from localstorage
+        // (async() => {
+        //     for (let i = 0; i < localStorage.length; i++) {
+        //         let key = localStorage.key(i);
+        //         if (key) {
+        //             console.log('playlist found in local storage'+key)
+        //             let cachedObj = JSON.parse(localStorage.getItem(key) || '{}');
+        //             // check if playlist is older than 1week day
+        //             if (moment(cachedObj.fetchedAt).isBefore(moment().subtract(1, 'week'))) {
+        //                 console.log(
+        //                     `playlist ${key} is older than 1 week.. Deleting from local storage`
+        //                 );
+        //                 localStorage.removeItem(key);
+        //                 const songs = await this.refreshPlaylist(key);
+        //                 console.log('playlist refreshed in the background '+key)
+        //                 const refreshedPlaylist:Playlist = {
+        //                     id: <string>key,
+        //                     name: 'playlist-'+key,
+        //                     songs: songs
+        //                 }
+        //                 // store new playlist to local storage
+        //                 this.addPlaylistToLocalStorage(refreshedPlaylist);
+        //                 // update playlist map
+        //                 this.updatePlaylistMap(refreshedPlaylist);
+        //             }else{
+        //                 this.updatePlaylistMap({
+        //                     id: key,
+        //                     name: 'playlist-'+key,
+        //                     songs: cachedObj.items
+        //                 })
+        //             }
+        //         }
+        //     }
+        // })()
     }
-    this.currentSongChanged.emit({track: this.playlist[index], index});
-  }
+    addPlaylist(playlist: Playlist) {
+        this.playlists.set(playlist.id, playlist);
+        this.addPlaylistToLocalStorage(playlist);
+        this.playerServ.addPlaylistItems(playlist.songs);
+    }
+    addPlaylistToLocalStorage(playlist:Playlist) {
+        // store item in localhost
+        localStorage.setItem(
+            playlist.name,
+            JSON.stringify({
+                playlistId: playlist.id,
+                fetchedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+                items: playlist.songs,
+            })
+        );
+    }
+    updatePlaylistMap(playlist: Playlist) {
+        this.playlists.set(playlist.id, playlist);
+        this.playlistChanged.emit(Array.from(this.playlists.values()));
+    }
+    isPlaylistExist(playlistId: string): boolean {
+        return this.playlists.has(playlistId);
+    }
+    getPlaylist(playlistId: string): Playlist {
+        return this.playlists.get(playlistId) || {id: '', name: '', songs: []};
+    }
+    refreshPlaylist(playlistId: string):Promise<any> {
+        return new Promise((res, rej) => {
+            console.log('refreshing playlist'+playlistId)
+            this.httpClient.get(`${this.baseUrl}/playlist/${playlistId}`).subscribe(
+                (data: any) => {
+                    console.log(data);
+                    res(data);
+                },
+                (err: any) => {
+                    console.log(err);
+                    rej(err);
+                }
+            );
+        })
+    }
+    getAllPlaylists(): Map<string, Playlist> {
+        return this.playlists;
+    }
 }
