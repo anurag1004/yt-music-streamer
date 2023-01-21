@@ -5,40 +5,7 @@ import * as _ from 'lodash';
   providedIn: 'root',
 })
 export class PlayerService {
-  private playlist: PlaylistItem[] = [
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-1",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-2",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-3",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-    {
-      id: 'hktr9_sRIS0',
-      original_title: "IT'S THE RIGHT TIME-4",
-      title: "IT'S THE RIGHT TIME",
-      artist: 'unknown',
-      duration: '221',
-      publishedAt: '2018-07-09T01:50:41.000Z',
-    },
-  ];
+  private playlist: PlaylistItem[] = [];
   private shuffledPlaylist: PlaylistItem[] = [];
   public playListChanged = new EventEmitter<PlaylistItem[]>();
   public currentSongChanged = new EventEmitter<{track:PlaylistItem, index:number}>();
