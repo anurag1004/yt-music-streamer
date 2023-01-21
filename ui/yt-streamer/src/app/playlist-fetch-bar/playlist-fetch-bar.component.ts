@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { PlayerService } from '../service/player.service';
 import * as moment from 'moment';
 import { PlaylistItem } from 'src/shared/playlistItem.model';
+import {faArrowsRotate} from '@fortawesome/free-solid-svg-icons';
 import { PlaylistStorageService } from '../service/playlist.storage.service';
 import { Playlist } from 'src/shared/playlist.model';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +17,9 @@ export class PlaylistFetchBarComponent implements OnInit{
   playlistUrl: string = '';
   foundPlaylists: Playlist[] = [];
   newPlaylistName: string = '';
+  /* configure icons */
+  refreshIcon = faArrowsRotate;
+  /* end */
   private baseUrl: string = 'http://localhost:3000';
   constructor(
     private httpClient: HttpClient,
@@ -44,7 +48,7 @@ export class PlaylistFetchBarComponent implements OnInit{
               `playlist ${playlistName}-${playlistId} is older than 1 week.. Deleting from local storage`
             );
             localStorage.removeItem(playlistName);
-            const songs = await this.playlistStorageServ.refreshPlaylist(playlistId);
+            const songs = await this.playlistStorageServ.getPlaylistSongs(playlistId);
             console.log('playlist refreshed in the background ' + playlistId);
             const refreshedPlaylist: Playlist = {
               id: playlistId,
@@ -72,7 +76,7 @@ export class PlaylistFetchBarComponent implements OnInit{
   loadSelectedPlaylist(pl:Playlist) {
     this.playerServ.addPlaylistItems(pl.songs);
   }
-  fetchPlaylist(event: Event, content: any) {
+  fetchPlaylist(event: Event, popupContent: any) {
     event.preventDefault();
     if (!this.playlistUrl.length) return;
     console.log(this.playlistUrl);
@@ -88,31 +92,37 @@ export class PlaylistFetchBarComponent implements OnInit{
       return;
     }
     // fetch when not in local storage
-    this.refreshPlaylist(event, content);
+    this.getNewPlaylist(this.playlistUrl , popupContent);
   }
-  refreshPlaylist(event: Event, content: any) {
-    const playlistId: string = this.getplaylistId(this.playlistUrl);
-    
-    if (!playlistId.length) return;
-    // fetch when not in local storage
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+  getNewPlaylist(playlistUrl:string, popupContent: any) {
+    if(!playlistUrl.length) return;
+    let playlistId: string = this.getplaylistId(playlistUrl);
+    this.modalService.open(popupContent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       console.log(`Closed with: ${result}`);
     }, (reason) => {
       console.log(`Dismissed ${reason}`);
     });
-    this.httpClient.get(`${this.baseUrl}/playlist/${playlistId}`).subscribe(
-      (data: any) => {
-        console.log(data);
-        // store new playlist
-        this.playlistStorageServ.addPlaylist({
-          id: playlistId,
-          name: this.newPlaylistName,
-          songs: data,
-        });
-      },
-      (err: any) => {
-        console.log(err);
-      }
-    );
+    this.refreshCurrentPlaylist({
+      id: playlistId,
+      name: this.newPlaylistName,
+      songs: []
+    })
+  }
+  async refreshCurrentPlaylist(pl:Playlist) {
+    if(!pl) return;
+    const songs = await this.playlistStorageServ.getPlaylistSongs(pl.id);
+    if(!songs || !songs.length){
+      console.log('playlist not found');
+      return;
+    }
+    const updatedPlaylist: Playlist = {
+      id: pl.id,
+      name: pl.name,
+      songs: songs,
+    }
+    console.log('playlist refreshed in the background ' + pl.id);
+    this.playlistStorageServ.updatePlaylistMap(updatedPlaylist)
+    this.playlistStorageServ.addPlaylistToLocalStorage(updatedPlaylist);
+    this.loadSelectedPlaylist(updatedPlaylist);
   }
 }

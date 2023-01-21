@@ -20,14 +20,6 @@
             Fetch Playlist!
           </button>
         </div>
-        <div class="col mt-1">
-          <button
-            class="btn btn-primary w-100"
-            (click)="refreshPlaylist($event, null)"
-          >
-            Refresh Playlist
-          </button>
-        </div>
       </div>
     </div>
     <div class="col"></div>
@@ -36,9 +28,16 @@
     <div class="col"></div>
     <div class="col-3">
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let pl of foundPlaylists" (click)="loadSelectedPlaylist(pl)" id="foundPlaylist">
-          {{pl.name}}
-        </li>
+        <div class="row" *ngFor="let pl of foundPlaylists">
+          <div class="col">
+            <li class="list-group-item"  (click)="loadSelectedPlaylist(pl)" id="foundPlaylist">
+              {{pl.name}}
+            </li>
+          </div>
+          <div class="col">
+            <fa-icon [icon]="refreshIcon" (click)="refreshCurrentPlaylist(pl)" style="cursor: pointer;"></fa-icon>
+          </div>
+        </div>
       </ul>
     </div>
     <div class="col"></div>
