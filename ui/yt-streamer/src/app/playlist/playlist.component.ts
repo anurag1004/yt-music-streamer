@@ -13,7 +13,5 @@ export class PlaylistComponent {
     this.playerServ.playListChanged.subscribe((playlist:PlaylistItem[]) => {
       this.playlist = playlist;
     });
-    // temporary
-    this.playlist = this.playerServ.getPlaylist();
   }
 }

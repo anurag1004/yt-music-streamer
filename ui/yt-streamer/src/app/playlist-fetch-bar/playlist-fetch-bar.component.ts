@@ -99,14 +99,15 @@ export class PlaylistFetchBarComponent implements OnInit{
     let playlistId: string = this.getplaylistId(playlistUrl);
     this.modalService.open(popupContent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       console.log(`Closed with: ${result}`);
+      this.refreshCurrentPlaylist({
+        id: playlistId,
+        name: this.newPlaylistName,
+        songs: []
+      })
     }, (reason) => {
       console.log(`Dismissed ${reason}`);
+      console.log('please enter a playlist name');
     });
-    this.refreshCurrentPlaylist({
-      id: playlistId,
-      name: this.newPlaylistName,
-      songs: []
-    })
   }
   async refreshCurrentPlaylist(pl:Playlist) {
     if(!pl) return;
