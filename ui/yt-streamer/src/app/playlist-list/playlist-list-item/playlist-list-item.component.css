@@ -1,0 +1,6 @@
+#foundPlaylist{
+    cursor: pointer;
+}
+#foundPlaylist:hover{
+    background-color: #e6e6e6;
+}

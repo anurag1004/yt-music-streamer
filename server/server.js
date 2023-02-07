@@ -18,7 +18,15 @@ app.use((req, res, next) => {
 app.get("/info/:id", async (req, res) => {
   try {
     const info = await  ytdl.getBasicInfo(req.params.id,{filter: "audioonly", opusEncoded: true});
-    res.send(info.formats[info.formats.length - 1]);
+    const details = {
+      thumbnail:
+        info.player_response.microformat.playerMicroformatRenderer.thumbnail
+          .thumbnails[0].url,
+      author: info.videoDetails.author.name,
+      title: info.videoDetails.title,
+      channel_url: info.videoDetails.author.channel_url,
+    };
+    res.send(details);
   } catch (err) {
     console.error(err);
     if (!res.headersSent) {

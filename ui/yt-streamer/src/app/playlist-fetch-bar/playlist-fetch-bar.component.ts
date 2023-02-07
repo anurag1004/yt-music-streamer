@@ -17,6 +17,7 @@ export class PlaylistFetchBarComponent implements OnInit{
   playlistUrl: string = '';
   foundPlaylists: Playlist[] = [];
   newPlaylistName: string = '';
+  isFetching = false;
   /* configure icons */
   refreshIcon = faArrowsRotate;
   /* end */
@@ -92,22 +93,21 @@ export class PlaylistFetchBarComponent implements OnInit{
       return;
     }
     // fetch when not in local storage
-    this.getNewPlaylist(this.playlistUrl , popupContent);
-  }
-  getNewPlaylist(playlistUrl:string, popupContent: any) {
-    if(!playlistUrl.length) return;
-    let playlistId: string = this.getplaylistId(playlistUrl);
     this.modalService.open(popupContent, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       console.log(`Closed with: ${result}`);
-      this.refreshCurrentPlaylist({
-        id: playlistId,
-        name: this.newPlaylistName,
-        songs: []
-      })
-    }, (reason) => {
-      console.log(`Dismissed ${reason}`);
-      console.log('please enter a playlist name');
-    });
+    })
+  }
+  async saveNewPlaylist() {
+    if(!this.newPlaylistName.length || !this.playlistUrl) return;
+    this.isFetching = true;
+    let playlistId: string = this.getplaylistId(this.playlistUrl);
+    await this.refreshCurrentPlaylist({
+      id: playlistId,
+      name: this.newPlaylistName,
+      songs: []
+    })
+    this.isFetching = false
+    this.modalService.dismissAll()
   }
   async refreshCurrentPlaylist(pl:Playlist) {
     if(!pl) return;

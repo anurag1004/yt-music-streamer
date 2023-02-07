@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { PlaylistItem } from 'src/shared/playlistItem.model';
 import * as _ from 'lodash';
+import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
@@ -9,7 +10,7 @@ export class PlayerService {
   private shuffledPlaylist: PlaylistItem[] = [];
   public playListChanged = new EventEmitter<PlaylistItem[]>();
   public currentSongChanged = new EventEmitter<{track:PlaylistItem, index:number}>();
-  constructor() {}
+  constructor(private httpClient: HttpClient) {}
   addPlaylistItems(items: any[]) {
     this.playlist = items.map((item: any) => {
       return new PlaylistItem(
@@ -49,5 +50,8 @@ export class PlayerService {
       return;
     }
     this.currentSongChanged.emit({track: this.playlist[index], index});
+  }
+  getSongThumbnailUrl(id: string) {
+    return this.httpClient.get('http://localhost:3000/info/' + id)
   }
 }

@@ -20,6 +20,7 @@ import { PlaylistItem } from 'src/shared/playlistItem.model';
 export class PlayerComponent {
   playlistItem: PlaylistItem = new PlaylistItem('', '', '', '', '', '');
   songIndex = -1;
+  thumbnailUrl = 'https://images.pexels.com/photos/1389429/pexels-photo-1389429.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1';
   /* configure icons */
   musicIcon = faMusic;
   playIcon = faPlay;
@@ -52,6 +53,12 @@ export class PlayerComponent {
         console.log(`new song: ${this.playlistItem.title} (${this.songIndex})`);
         // play new song
         this.playerHandler();
+        // get the thumbnail url
+        this.playerServ.getSongThumbnailUrl(this.playlistItem.id).subscribe((data:any)=>{
+          this.thumbnailUrl = data.thumbnail;
+        },(err:any)=>{
+          console.log(err)
+        })
       }
     );
   }

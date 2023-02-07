@@ -28,16 +28,7 @@
     <div class="col"></div>
     <div class="col-3">
       <ul class="list-group">
-        <div class="row" *ngFor="let pl of foundPlaylists">
-          <div class="col">
-            <li class="list-group-item"  (click)="loadSelectedPlaylist(pl)" id="foundPlaylist">
-              {{pl.name}}
-            </li>
-          </div>
-          <div class="col">
-            <fa-icon [icon]="refreshIcon" (click)="refreshCurrentPlaylist(pl)" style="cursor: pointer;"></fa-icon>
-          </div>
-        </div>
+        <app-playlist-list [foundPlaylists]="foundPlaylists"></app-playlist-list>
       </ul>
     </div>
     <div class="col"></div>
@@ -46,7 +37,7 @@
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Found New Playlist</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">×</span>
+        <span aria-hidden="true">X</span>
       </button>
     </div>
     <div class="modal-body">
@@ -61,7 +52,10 @@
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" [disabled]="newPlaylistName.length==0" (click)="modal.close('Save click')">Ok</button>
+      <div *ngIf="isFetching" class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <button type="button" class="btn btn-outline-dark" [disabled]="newPlaylistName.length==0" (click)="saveNewPlaylist()">Ok</button>
     </div>
   </ng-template>
 </div>

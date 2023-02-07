@@ -12,6 +12,8 @@ import { PlaylistFetchBarComponent } from './playlist-fetch-bar/playlist-fetch-b
 import { SearchBarComponent } from './playlist/search-bar/search-bar.component';
 import { MinuteSecondsPipe } from './pipes/minute-seconds.pipe';
 import { PlayerComponent } from './playlist/player/player.component';
+import { PlaylistListComponent } from './playlist-list/playlist-list.component';
+import { PlaylistListItemComponent } from './playlist-list/playlist-list-item/playlist-list-item.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { PlayerComponent } from './playlist/player/player.component';
     PlaylistFetchBarComponent,
     SearchBarComponent,
     MinuteSecondsPipe,
-    PlayerComponent
+    PlayerComponent,
+    PlaylistListComponent,
+    PlaylistListItemComponent
   ],
   imports: [
     BrowserModule,

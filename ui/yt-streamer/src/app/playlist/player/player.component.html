@@ -3,6 +3,13 @@
       <div class="col"></div>
       <div class="col-8">
         <div class="card">
+          <div class="row">
+            <div class="col"></div>
+            <div class="col-6">
+              <img [src]="thumbnailUrl" class="img-fluid" alt="...">
+            </div>
+            <div class="col"></div>
+          </div>
           <div class="card-body">
             <fa-icon [icon]="musicIcon"></fa-icon> {{ playlistItem.artist }} -
             {{ playlistItem.original_title }}
