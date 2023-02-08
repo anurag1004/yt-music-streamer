@@ -1,0 +1,14 @@
+{
+    "name": "Yt-streamer",
+    "version": "1.0.0",
+    "description": "Play youtube playlist without ads in your browser",
+    "manifest_version": 3,
+    "author": "Anurag Verma",
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "Yt-streamer"
+    },
+    "permissions": [
+        "tabs"
+    ]
+}

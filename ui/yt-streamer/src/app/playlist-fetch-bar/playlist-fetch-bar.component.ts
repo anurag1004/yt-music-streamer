@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlayerService } from '../service/player.service';
 import * as moment from 'moment';
@@ -13,10 +13,13 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './playlist-fetch-bar.component.html',
   styleUrls: ['./playlist-fetch-bar.component.css'],
 })
-export class PlaylistFetchBarComponent implements OnInit{
-  playlistUrl: string = '';
+export class PlaylistFetchBarComponent implements OnInit, OnChanges{
+  @Input() playlistUrl: string = '';
   foundPlaylists: Playlist[] = [];
   newPlaylistName: string = '';
+  // get popup model
+  @ViewChild('mymodal') popupContent: ElementRef<HTMLElement> | undefined;
+
   isFetching = false;
   /* configure icons */
   refreshIcon = faArrowsRotate;
@@ -31,6 +34,14 @@ export class PlaylistFetchBarComponent implements OnInit{
     this.playlistStorageServ.playlistChanged.subscribe((playlists: Playlist[]) => {
       this.foundPlaylists = playlists;
     })
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["playlistUrl"].currentValue) {
+      this.playlistUrl = changes["playlistUrl"].currentValue;
+      console.log(this.playlistUrl)
+      // click fetch button
+      this.fetchPlaylist(new Event('click'), this.popupContent);
+    }
   }
   ngOnInit(): void {
     // fetch all playlist from localstorage
